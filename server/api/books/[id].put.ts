@@ -4,7 +4,7 @@ import { readBody, createError } from 'h3'
 export default defineEventHandler(async (event) => {
     const id = event.context.params?.id
     if (!id) {
-    throw createError({ statusCode: 400, message: 'Missing book ID' })
+        throw createError({ statusCode: 400, message: 'Missing book ID' })
   }
 
     const { is_read } = await readBody(event)
