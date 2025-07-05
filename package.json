@@ -10,6 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@nuxt/ui": "^3.2.0",
     "nuxt": "^3.17.6",
     "sqlite": "^5.1.1",
     "sqlite3": "^5.1.7",

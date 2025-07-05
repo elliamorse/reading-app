@@ -1,8 +1,17 @@
 import { getDb } from '../../db'
+
+
 export default defineEventHandler(async (event) => {
-  const { id } = event.context.params || {}
-  if (!id) return {success: false, error: 'Missing book ID'}
-  const db = await getDb()
-  await db.run('DELETE FROM books WHERE id = ?', [id])
-  return { success: true }
+    const idParam = event.context.params?.id
+    const id = Number(idParam)
+
+    if (!id || isNaN(id)) {
+        return { success: false, error: 'Missing or invalid book ID' }
+  }
+
+    const db = await getDb()
+    
+    const result = await db.run('DELETE FROM books WHERE id = ?', [id])
+    const rowsDeleted = result.changes ?? 0
+    return { success: rowsDeleted > 0 }
 })

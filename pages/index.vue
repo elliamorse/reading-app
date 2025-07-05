@@ -1,47 +1,58 @@
 <template>
-  <div class="p-6 space-y-6 max-w-2xl mx-auto">
-    <h1 class="text-3xl font-bold">📚 My Reading List</h1>
-
+  <UContainer>
     <UCard>
-      <UForm @submit.prevent="addBook" class="space-y-4">
-        <UInput v-model="newTitle" placeholder="Book title" required />
-        <UInput v-model="newAuthor" placeholder="Author" required />
-        <UButton type="submit">Add Book</UButton>
-      </UForm>
+      <h2 class="text-lg font-bold">Reading List</h2>
+      <form @submit.prevent="addBook">
+        <UInput v-model="title" placeholder="Book Title" required />
+        <UInput v-model="author" placeholder="Author" required />
+        <UButton type="submit">Add</UButton>
+      </form>
+      <ul>
+        <li v-for="book in books" :key="book.id">
+          <span>{{ book.title }} by {{ book.author }}</span>
+          <input type="checkbox" :checked="book.is_read" @change="toggleRead(book)" />
+          <UButton @click="removeBook(book.id)" color="red">Delete</UButton>
+        </li>
+      </ul>
     </UCard>
-
-    <div v-if="bookList.length === 0" class="text-gray-500">No books yet. Add your first one!</div>
-
-    <BookItem
-      v-for="book in bookList"
-      :key="book.id"
-      :book="book"
-      @refresh="fetchBooks"
-    />
-  </div>
+  </UContainer>
 </template>
 
 <script setup>
-import BookItem from '~/components/BookItem.vue'
+const title = ref('')
+const author = ref('')
+const books = ref([])
 
-const newTitle = ref('')
-const newAuthor = ref('')
-const bookList = ref([])
-
-const fetchBooks = async () => {
-  bookList.value = await $fetch('/api/books')
+async function fetchBooks() {
+  books.value = await $fetch('/api/books')
 }
 
-const addBook = async () => {
-  await $fetch('/api/books', {
-    method: 'POST',
-    body: {
-      title: newTitle.value,
-      author: newAuthor.value
-    }
+async function addBook() {
+    await $fetch('/api/books', {
+        method: 'POST',
+        body: { title: title.value, author: author.value }
+    })
+    title.value = ''
+    author.value = ''
+    fetchBooks()
+}
+
+async function toggleRead(book) {
+    const newStatus = book.is_read ? 0 : 1
+    await $fetch(`/api/books/${book.id}`, {
+        method: 'PUT',
+        body: { is_read: newStatus }
   })
-  newTitle.value = ''
-  newAuthor.value = ''
+  fetchBooks()
+}
+
+
+async function removeBook(id) {
+    console.log("Deleting book with id:", id)
+  
+    await $fetch(`/api/books/${id}`, {
+    method: 'DELETE'
+  })
   fetchBooks()
 }
 
