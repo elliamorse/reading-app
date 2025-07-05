@@ -1,3 +1,5 @@
+//default handler for all HTTP methods 
+
 import { getDb } from '../../db'
 
 export default defineEventHandler(async (event) => {

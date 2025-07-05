@@ -1,3 +1,5 @@
+//component file contains the UI for displaying a book with its title author, and read status
+
 <template>
   <UCard>
     <div class="flex justify-between items-center">
