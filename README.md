@@ -1,5 +1,5 @@
 # My Reading List Application
-instructions for running at the bottom
+Wanted to teach myself nuxt.js!
 
 ## Project Description  
 A web application to help users manage a personal reading list. Users can add books, view their list, mark books as **"Read"** or **"Unread"**, and delete books.
